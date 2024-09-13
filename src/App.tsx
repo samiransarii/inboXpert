@@ -1,10 +1,11 @@
 import './App.css'
+import Popup from './components/popup/popup.component';
 
 function App() {
   return (
     <>
     <div className="app">
-      <h1>NeatMail</h1>
+      <Popup/>
     </div>
     </>
   )
