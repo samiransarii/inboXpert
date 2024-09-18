@@ -10,18 +10,18 @@ const CustomButton: FC<CustomButtonProps> = ({ children, type }) => {
   const baseClass = "px-6 py-3 rounded rounded-full";
   const typeClass =
     type === "work"
-      ? "color-work text-white"
+      ? "bg-clr-work text-white"
       : type === "personal"
-      ? "color-personal text-white"
+      ? "bg-clr-personal text-white"
       : type === "promotional"
-      ? "color-promotional text-white"
+      ? "bg-clr-promotional text-white"
       : type === "spam"
-      ? "color-spam text-white"
+      ? "bg-clr-spam text-white"
       : type === "social"
-      ? "color-social text-white"
+      ? "bg-clr-social text-white"
       : type === "all-mails"
-      ? "color-all-mails text-white"
-      : "color-default text-black";
+      ? "bg-clr-all-mails text-white"
+      : "bg-clr-default text-black";
 
   return <button className={`${baseClass} ${typeClass}`}>{children}</button>;
 };

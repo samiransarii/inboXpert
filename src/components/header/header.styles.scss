@@ -1,9 +1,14 @@
 .popup-header {
-    height: 5vh;
+  height: 12vh;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    font-size: 1.5rem;
+  font-size: 2.8rem;
+
+  .title {
+    font-size: 2.8rem;
+    cursor: pointer;
+  }
 }

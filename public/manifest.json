@@ -3,6 +3,10 @@
   "name": "Smart Email",
   "description": "Keeps all your emails organized.",
   "version": "1.0",
+  "background": {
+    "service_worker": "./background.js"
+  },
+  "permissions": ["storage", "tabs"],
   "action": {
     "default_popup": "index.html",
     "default_icon": "assets/static/hello.png"

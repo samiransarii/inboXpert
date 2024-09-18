@@ -1,10 +1,18 @@
 import "./header.styles.scss";
 
-const Header = () => (
-  <div className="popup-header bg-slate-300 px-4 py-2 pr-8">
-    <div className="title font-semibold">InboXpert</div>
-    <div className="control-btn-container">x</div>
-  </div>
-);
+const Header = () => {
+  const handleClick = () => {
+    window.close();
+  };
+
+  return (
+    <div className="popup-header bg-clr-gray px-8 py-4 pr-14">
+      <div className="title font-semibold">InboXpert</div>
+      <button onClick={handleClick} className="control-btn-container">
+        x
+      </button>
+    </div>
+  );
+};
 
 export default Header;
