@@ -5,17 +5,24 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build:main": "vite build",
+    "build:content": "env BUILD_TARGET=content vite build",
+    "build:background": "env BUILD_TARGET=background vite build",
+    "build": "tsc -b && yarn build:main && yarn build:content && yarn build:background",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "material-icons": "^1.13.12",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "rimraf": "^6.0.1",
+    "sass": "^1.79.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@types/chrome": "^0.0.271",
+    "@types/node": "^22.7.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

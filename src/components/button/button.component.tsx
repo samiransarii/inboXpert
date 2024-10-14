@@ -4,9 +4,14 @@ import "./button.styles.scss";
 interface CustomButtonProps {
   children: ReactNode;
   type?: "work" | "personal" | "promotional" | "spam" | "social" | "all-mails";
+  handleClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const CustomButton: FC<CustomButtonProps> = ({ children, type }) => {
+const CustomButton: FC<CustomButtonProps> = ({
+  children,
+  type,
+  handleClick,
+}) => {
   const baseClass = "px-6 py-3 rounded rounded-full";
   const typeClass =
     type === "work"
@@ -23,7 +28,11 @@ const CustomButton: FC<CustomButtonProps> = ({ children, type }) => {
       ? "bg-clr-all-mails text-white"
       : "bg-clr-default text-black";
 
-  return <button className={`${baseClass} ${typeClass}`}>{children}</button>;
+  return (
+    <button onClick={handleClick} className={`${baseClass} ${typeClass}`}>
+      {children}
+    </button>
+  );
 };
 
 export default CustomButton;

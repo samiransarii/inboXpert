@@ -1,0 +1,8 @@
+.top-bar-actions-container {
+  display: flex;
+  align-self: center;
+
+  button:not(:last-child) {
+    margin-right: 0.8rem;
+  }
+}
