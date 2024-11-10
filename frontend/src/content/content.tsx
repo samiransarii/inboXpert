@@ -42,23 +42,22 @@ function fixGmailStyles() {
   };
 
   const hamBurgerMenu = document.querySelector(selectors.hamBurgerMenu);
-  const userAvatar = document.querySelector(selectors.userAvatar);
+  const userAvatar = document.querySelectorAll(selectors.userAvatar);
   const fixElement = document.querySelector(selectors.fixElement);
 
   if (hamBurgerMenu instanceof HTMLElement) {
     hamBurgerMenu.style.width = "48px";
     hamBurgerMenu.style.height = "48px";
-    console.log("Fixed hamburger menu");
   }
 
-  if (userAvatar instanceof HTMLElement) {
-    userAvatar.style.minWidth = "80px";
-    console.log("Fixed user avatar");
+  for (const node of userAvatar) {
+    if (node instanceof HTMLElement) {
+      node.style.minWidth = "80px";
+    }
   }
 
   if (fixElement instanceof HTMLElement) {
     fixElement.style.alignItems = "center";
-    console.log("Fixed alignment of fixElement");
   }
 }
 
@@ -82,9 +81,8 @@ function injectReactComponent(targetElement: Element) {
 // Function to handle mutations
 function handleMutations(
   mutationsList: MutationRecord[],
-  observer: MutationObserver
+  _observer: MutationObserver
 ) {
-  console.log(mutationsList);
   for (const mutation of mutationsList) {
     if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
       // Check if the target element is added
@@ -95,7 +93,7 @@ function handleMutations(
           fixGmailStyles();
           // const targetElement = await waitForElement(".G-tF");
           // injectReactComponent(targetElement);
-          observer.disconnect();
+          // observer.disconnect();
         }
       });
     }
