@@ -6,7 +6,7 @@ import (
 
 	_ "github.com/joho/godotenv/autoload"
 	utils "github.com/samiransarii/inboXpert/backend/common/utils"
-	handle "github.com/samiransarii/inboXpert/backend/gateway/handlers"
+	handlers "github.com/samiransarii/inboXpert/backend/gateway/handlers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,10 +19,13 @@ func main() {
 	// nil for now, update with the proxies of microservices when microservices starts running
 	gateway.SetTrustedProxies(nil)
 
+	// create handlers
+	categorizationHandler := handlers.NewCategorizationHandler()
+
 	// Service Routes
-	gateway.GET("/categorize", handle.CategorizationService)
-	gateway.GET("/spam-filter", handle.SpamFilterService)
-	gateway.GET("/priority", handle.PriorityFilterService)
+	gateway.POST("/categorize", categorizationHandler.Handle)
+	// gateway.GET("/spam-filter", handle.SpamFilterService)
+	// gateway.GET("/priority", handle.PriorityFilterService)
 
 	// Starting the gateway server
 	err := gateway.Run("localhost:" + GATEWAY_PORT)

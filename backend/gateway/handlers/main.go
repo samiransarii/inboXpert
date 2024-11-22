@@ -1,12 +1,26 @@
 package handlers
 
 import (
+	"log"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	utils "github.com/samiransarii/inboXpert/backend/common/utils"
 )
 
+// type CategorizeServiceRequest struct {
+// 	Emails []struct {
+// 		ID        string            `json:"id"`
+// 		Subject   string            `json:"subject"`
+// 		Body      string            `json:"body"`
+// 		Sender    string            `json:"sender"`
+// 		Recipents []string          `json:"recipients"`
+// 		Headers   map[string]string `json:"headers"`
+// 	} `json:"emails"`
+// }
+
 var (
-	CATEGORIZE_SERVICE_URL      = utils.GetEnv("CATEGORIZE_SERVICE", "https://localhost/3001")
+	CATEGORIZE_SERVICE_URL      = utils.GetEnv("CATEGORIZE_SERVICE", "https://localhost/50051")
 	SPAM_FILTER_SERVICE_URL     = utils.GetEnv("SPAM_FILTER_SERVICE", "https://localhost/3002")
 	PRIORITY_FILTER_SERVICE_URL = utils.GetEnv("PRIORITY_FILTER_SERVICE", "https://localhost/3003")
 )
@@ -25,6 +39,13 @@ var (
 //	Pass this function as a handler for the "/categorize" route to proxy requests
 //	to the appropriate backend service.
 func CategorizationService(c *gin.Context) {
+	var requestData CategorizeServiceRequest
+	if err := c.ShouldBindJSON(&requestData); err != nil {
+
+		log.Printf("Invalid request payload: %v", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		return
+	}
 	utils.ProxyToService(c, CATEGORIZE_SERVICE_URL)
 }
 
