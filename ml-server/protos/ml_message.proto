@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package inboxpert.ml.service;
+
+option go_package = "github.com/samiransarii/inboXpert/ml-server/protos;mlserver";
+
+message EmailRequest {
+    string id = 1;
+    string subject = 2;
+    string body = 3;
+    string sender = 4;
+    repeated string recipients = 5;
+    map<string, string> headers = 6;
+}
+
+message BatchEmailRequest {
+    repeated EmailRequest emails = 1;
+}
+
+message CategoryResponse {
+    string email_id = 1;
+    string category = 2;
+    float confidence = 3;
+    repeated string keywords = 4;
+    repeated AlternativeCategory alternatives = 5;
+}
+
+message BatchCategoryResponse {
+    repeated CategoryResponse results = 1;
+}
+
+message AlternativeCategory {
+    string category = 1;
+    float confindence = 2;
+}

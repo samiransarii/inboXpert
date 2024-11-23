@@ -6,7 +6,7 @@ import (
 
 	_ "github.com/joho/godotenv/autoload"
 	utils "github.com/samiransarii/inboXpert/backend/common/utils"
-	handlers "github.com/samiransarii/inboXpert/backend/gateway/handlers"
+	handlers "github.com/samiransarii/inboXpert/gateway/handlers"
 
 	"github.com/gin-gonic/gin"
 )

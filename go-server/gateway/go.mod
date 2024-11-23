@@ -1,4 +1,4 @@
-module github.com/samiransarii/inboXpert/backend/gateway
+module github.com/samiransarii/inboXpert/gateway
 
 go 1.23.1
 

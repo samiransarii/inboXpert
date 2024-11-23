@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	utils "github.com/samiransarii/inboXpert/backend/common/utils"
 	pb "github.com/samiransarii/inboXpert/backend/proto/gen/services/email_categorization_service"
+	utils "github.com/samiransarii/inboXpert/common/utils"
 )
 
 type CategorizationHandler struct {

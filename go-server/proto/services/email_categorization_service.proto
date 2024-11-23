@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package inboxpert.services.categorization.v1;
+option go_package = "github.com/samiransarii/inboXpert/backend/proto/gen/email_categorization_service";
+
+import "backend/proto/messages/email_categorization.proto";
+
+message CategorizeRequest {
+    repeated Email emails = 1;
+}
+
+message CategorizeResponse {
+    repeated CategoryResult results = 1;
+}
+
+service EmailCategorizationService {
+    rpc CategorizeEmails(CategorizeRequest) returns (CategorizeResponse) {}
+}

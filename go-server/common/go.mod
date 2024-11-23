@@ -1,4 +1,4 @@
-module github.com/samiransarii/inboXpert/backend/common
+module github.com/samiransarii/inboXpert/common
 
 go 1.23.1
 

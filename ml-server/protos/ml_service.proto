@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package inboxpert.ml.service;
+
+option go_package = "github.com/samiransarii/inboXpert/ml-server/protos;mlserver";
+
+import "ml_message.proto";
+
+service MLService {
+    rpc CategorizeEmail (EmailRequest) returns (CategoryResponse);
+    rpc BatchCategorizeEmail (BatchEmailRequest) returns (BatchCategoryResponse);
+}
