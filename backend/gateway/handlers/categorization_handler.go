@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	pb "github.com/samiransarii/inboXpert/backend/proto/gen/services/email_categorization_service"
+	pb "github.com/samiransarii/inboXpert/services/email-categorization/proto"
 	utils "github.com/samiransarii/inboXpert/common/utils"
 )
 

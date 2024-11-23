@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.28.3
-// source: proto/services/email_categorization_service.proto
+// source: email_categorization_service.proto
 
-package emailcategorizationsvcpb
+package emailcategorization
 
 import (
 	context "context"
@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	EmailCategorizationService_CategorizeEmails_FullMethodName = "/iboxpert.services.categorization.v1.EmailCategorizationService/CategorizeEmails"
+	EmailCategorizationService_CategorizeEmails_FullMethodName = "/inboxpert.services.categorization.v1.EmailCategorizationService/CategorizeEmails"
 )
 
 // EmailCategorizationServiceClient is the client API for EmailCategorizationService service.
@@ -109,7 +109,7 @@ func _EmailCategorizationService_CategorizeEmails_Handler(srv interface{}, ctx c
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var EmailCategorizationService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "iboxpert.services.categorization.v1.EmailCategorizationService",
+	ServiceName: "inboxpert.services.categorization.v1.EmailCategorizationService",
 	HandlerType: (*EmailCategorizationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -118,5 +118,5 @@ var EmailCategorizationService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/services/email_categorization_service.proto",
+	Metadata: "email_categorization_service.proto",
 }

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package inboxpert.services.categorization.v1;
-option go_package = "github.com/samiransarii/inboXpert/backend/proto/gen/email_categorization_service";
+option go_package ="github.com/samiransarii/inboXpert/services/email-categorization/proto;emailcategorization";
 
 message Email {
     string id = 1;

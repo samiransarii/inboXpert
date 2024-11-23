@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/samiransarii/inboXpert/backend/proto/gen/services/email_categorization_service"
+	pb "github.com/samiransarii/inboXpert/services/email-categorization/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

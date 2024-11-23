@@ -2,8 +2,6 @@ module github.com/samiransarii/inboXpert/services/email-categorization
 
 go 1.23.1
 
-require github.com/samiransarii/inboXpert/backend v0.0.0-20241112093346-7d17fc6faf3a
-
 require (
 	golang.org/x/net v0.29.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect

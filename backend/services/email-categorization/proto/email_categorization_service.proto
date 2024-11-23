@@ -1,9 +1,9 @@
 syntax = "proto3";
 
 package inboxpert.services.categorization.v1;
-option go_package = "github.com/samiransarii/inboXpert/backend/proto/gen/email_categorization_service";
+option go_package = "github.com/samiransarii/inboXpert/services/email-categorization/proto;emailcategorization";
 
-import "backend/proto/messages/email_categorization.proto";
+import "email_categorization.proto";
 
 message CategorizeRequest {
     repeated Email emails = 1;
