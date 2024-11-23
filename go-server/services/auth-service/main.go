@@ -1,5 +1,11 @@
 package main
 
 import (
-	pb "github.com/samiransarii/inboXpert/ml-server/protos/mlserver"
+	"fmt"
+
+	pb "github.com/samiransarii/inboXpert/go-server/protos/ml_server"
 )
+
+func main() {
+	fmt.Printf("Not working")
+}

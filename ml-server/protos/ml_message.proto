@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package inboxpert.ml.service;
 
-option go_package = "github.com/samiransarii/inboXpert/go-server/proto/mlserver";
+option go_package = "github.com/samiransarii/inboXpert/go-server/proto/ml_server";
 
 message EmailRequest {
     string id = 1;

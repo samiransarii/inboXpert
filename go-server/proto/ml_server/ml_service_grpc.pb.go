@@ -4,7 +4,7 @@
 // - protoc             v5.28.3
 // source: ml_service.proto
 
-package mlserver
+package ml_server
 
 import (
 	context "context"
