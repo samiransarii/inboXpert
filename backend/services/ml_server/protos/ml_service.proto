@@ -2,11 +2,11 @@ syntax = "proto3";
 
 package inboxpert.ml.service;
 
-option go_package ="github.com/samiransarii/inboXpert/go-server/proto/ml_server";
+option go_package ="github.com/samiransarii/inboXpert/services/ml_server";
 
 import "ml_message.proto";
 
-service MLService {
+service EmailPrediction {
     rpc CategorizeEmail (EmailRequest) returns (CategoryResponse);
     rpc BatchCategorizeEmail (BatchEmailRequest) returns (BatchCategoryResponse);
 }

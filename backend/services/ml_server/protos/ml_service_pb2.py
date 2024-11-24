@@ -22,16 +22,17 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
-import ml_message_pb2 as ml__message__pb2
+from . import ml_message_pb2 as ml__message__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10ml_service.proto\x12\x14inboxpert.ml.service\x1a\x10ml_message.proto2\xd8\x01\n\tMLService\x12]\n\x0f\x43\x61tegorizeEmail\x12\".inboxpert.ml.service.EmailRequest\x1a&.inboxpert.ml.service.CategoryResponse\x12l\n\x14\x42\x61tchCategorizeEmail\x12\'.inboxpert.ml.service.BatchEmailRequest\x1a+.inboxpert.ml.service.BatchCategoryResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x10ml_service.proto\x12\x14inboxpert.ml.service\x1a\x10ml_message.proto2\xde\x01\n\x0f\x45mailPrediction\x12]\n\x0f\x43\x61tegorizeEmail\x12\".inboxpert.ml.service.EmailRequest\x1a&.inboxpert.ml.service.CategoryResponse\x12l\n\x14\x42\x61tchCategorizeEmail\x12\'.inboxpert.ml.service.BatchEmailRequest\x1a+.inboxpert.ml.service.BatchCategoryResponseB6Z4github.com/samiransarii/inboXpert/services/ml_serverb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'ml_service_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-  DESCRIPTOR._loaded_options = None
-  _globals['_MLSERVICE']._serialized_start=61
-  _globals['_MLSERVICE']._serialized_end=277
+  _globals['DESCRIPTOR']._loaded_options = None
+  _globals['DESCRIPTOR']._serialized_options = b'Z4github.com/samiransarii/inboXpert/services/ml_server'
+  _globals['_EMAILPREDICTION']._serialized_start=61
+  _globals['_EMAILPREDICTION']._serialized_end=283
 # @@protoc_insertion_point(module_scope)

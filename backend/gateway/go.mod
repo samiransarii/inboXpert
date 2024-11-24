@@ -4,7 +4,6 @@ go 1.23.1
 
 require (
 	github.com/gin-gonic/gin v1.10.0
-	github.com/samiransarii/inboXpert/backend/common v0.0.0-20241112093346-7d17fc6faf3a
 )
 
 require (

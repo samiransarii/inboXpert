@@ -5,7 +5,7 @@ import (
 	"log"
 
 	_ "github.com/joho/godotenv/autoload"
-	utils "github.com/samiransarii/inboXpert/backend/common/utils"
+	utils "github.com/samiransarii/inboXpert/common/utils"
 	handlers "github.com/samiransarii/inboXpert/gateway/handlers"
 
 	"github.com/gin-gonic/gin"
