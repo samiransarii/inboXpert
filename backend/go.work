@@ -1,8 +1,9 @@
 go 1.23.1
 
 use (
+	.
+	./common
 	./gateway
 	./services/auth-service
 	./services/email-categorization
-	./common
 )

@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/joho/godotenv/autoload"
+
 	utils "github.com/samiransarii/inboXpert/common/utils"
 	handlers "github.com/samiransarii/inboXpert/gateway/handlers"
-
-	"github.com/gin-gonic/gin"
 )
 
 var GATEWAY_PORT = utils.GetEnv("GATEWAY_PORT", "8080")

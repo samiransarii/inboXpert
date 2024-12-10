@@ -1,4 +1,5 @@
 import grpc
+import os
 
 # import numpy as np
 import protos.ml_message_pb2 as msgpb
@@ -7,25 +8,35 @@ import protos.ml_service_pb2_grpc as svcpb_grpc
 
 from concurrent import futures
 from grpc_reflection.v1alpha import reflection
+from .predict_category import EmailCategoryPredictor
 
 
 class EmailPredictionServicer(svcpb_grpc.EmailPredictionServicer):
     def __init__(self):
-        # Initialize the model here
-        self.model_version = "v1.0"
+        # Initialize the correct model path
+        current_file_path = os.path.abspath(__file__)
+        current_dir = os.path.dirname(current_file_path)
+        model_file_path = os.path.join(
+            current_dir, "..", "models", "email_classifier.pkl"
+        )
+
+        self.model_path = model_file_path
+        self.category_predictor = EmailCategoryPredictor(self.model_path)
 
     def CategorizeEmail(self, request, context):
         try:
-            # ML logic goes here
-            # For now, returns a dummy response
+            # Extract email body and subject and make prediction
+            email_text = request.subject + " " + request.body
+            ml_category, ml_confidence = self.category_predictor.predict_email(
+                email_text
+            )
+
             return msgpb.CategoryResponse(
-                id="1",
-                category="INVOICE",
-                confidence=0.8,
-                keywords=["invoice", "pay", "due"],
-                alternatives=[
-                    msgpb.AlternativeCategory(category="FINANCE", confindence=0.75)
-                ],
+                id=request.id,
+                category=ml_category,
+                confidence=ml_confidence,
+                keywords=[],
+                alternatives=[msgpb.AlternativeCategory()],
             )
         except Exception as e:
             context.set_code(grpc.StatusCode.INTERNAL)

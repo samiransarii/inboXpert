@@ -6,13 +6,22 @@ option go_package = "github.com/samiransarii/inboXpert/services/email-categoriza
 import "email_categorization.proto";
 
 message CategorizeRequest {
-    repeated Email emails = 1;
+    Email email = 1;
 }
 
 message CategorizeResponse {
+    CategoryResult result = 1;
+}
+
+message BatchCategorizeRequest {
+    repeated Email emails = 1;
+}
+
+message BatchCategorizeResponse {
     repeated CategoryResult results = 1;
 }
 
 service EmailCategorizationService {
-    rpc CategorizeEmails(CategorizeRequest) returns (CategorizeResponse) {}
+    rpc CategorizeEmail(CategorizeRequest) returns (CategorizeResponse) {}
+    rpc BatchCategorizeEmails(BatchCategorizeRequest) returns (BatchCategorizeResponse) {}
 }

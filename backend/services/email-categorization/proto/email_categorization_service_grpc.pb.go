@@ -19,14 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	EmailCategorizationService_CategorizeEmails_FullMethodName = "/inboxpert.services.categorization.v1.EmailCategorizationService/CategorizeEmails"
+	EmailCategorizationService_CategorizeEmail_FullMethodName       = "/inboxpert.services.categorization.v1.EmailCategorizationService/CategorizeEmail"
+	EmailCategorizationService_BatchCategorizeEmails_FullMethodName = "/inboxpert.services.categorization.v1.EmailCategorizationService/BatchCategorizeEmails"
 )
 
 // EmailCategorizationServiceClient is the client API for EmailCategorizationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EmailCategorizationServiceClient interface {
-	CategorizeEmails(ctx context.Context, in *CategorizeRequest, opts ...grpc.CallOption) (*CategorizeResponse, error)
+	CategorizeEmail(ctx context.Context, in *CategorizeRequest, opts ...grpc.CallOption) (*CategorizeResponse, error)
+	BatchCategorizeEmails(ctx context.Context, in *BatchCategorizeRequest, opts ...grpc.CallOption) (*BatchCategorizeResponse, error)
 }
 
 type emailCategorizationServiceClient struct {
@@ -37,10 +39,20 @@ func NewEmailCategorizationServiceClient(cc grpc.ClientConnInterface) EmailCateg
 	return &emailCategorizationServiceClient{cc}
 }
 
-func (c *emailCategorizationServiceClient) CategorizeEmails(ctx context.Context, in *CategorizeRequest, opts ...grpc.CallOption) (*CategorizeResponse, error) {
+func (c *emailCategorizationServiceClient) CategorizeEmail(ctx context.Context, in *CategorizeRequest, opts ...grpc.CallOption) (*CategorizeResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CategorizeResponse)
-	err := c.cc.Invoke(ctx, EmailCategorizationService_CategorizeEmails_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, EmailCategorizationService_CategorizeEmail_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *emailCategorizationServiceClient) BatchCategorizeEmails(ctx context.Context, in *BatchCategorizeRequest, opts ...grpc.CallOption) (*BatchCategorizeResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchCategorizeResponse)
+	err := c.cc.Invoke(ctx, EmailCategorizationService_BatchCategorizeEmails_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +63,8 @@ func (c *emailCategorizationServiceClient) CategorizeEmails(ctx context.Context,
 // All implementations must embed UnimplementedEmailCategorizationServiceServer
 // for forward compatibility.
 type EmailCategorizationServiceServer interface {
-	CategorizeEmails(context.Context, *CategorizeRequest) (*CategorizeResponse, error)
+	CategorizeEmail(context.Context, *CategorizeRequest) (*CategorizeResponse, error)
+	BatchCategorizeEmails(context.Context, *BatchCategorizeRequest) (*BatchCategorizeResponse, error)
 	mustEmbedUnimplementedEmailCategorizationServiceServer()
 }
 
@@ -62,8 +75,11 @@ type EmailCategorizationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedEmailCategorizationServiceServer struct{}
 
-func (UnimplementedEmailCategorizationServiceServer) CategorizeEmails(context.Context, *CategorizeRequest) (*CategorizeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CategorizeEmails not implemented")
+func (UnimplementedEmailCategorizationServiceServer) CategorizeEmail(context.Context, *CategorizeRequest) (*CategorizeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CategorizeEmail not implemented")
+}
+func (UnimplementedEmailCategorizationServiceServer) BatchCategorizeEmails(context.Context, *BatchCategorizeRequest) (*BatchCategorizeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BatchCategorizeEmails not implemented")
 }
 func (UnimplementedEmailCategorizationServiceServer) mustEmbedUnimplementedEmailCategorizationServiceServer() {
 }
@@ -87,20 +103,38 @@ func RegisterEmailCategorizationServiceServer(s grpc.ServiceRegistrar, srv Email
 	s.RegisterService(&EmailCategorizationService_ServiceDesc, srv)
 }
 
-func _EmailCategorizationService_CategorizeEmails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EmailCategorizationService_CategorizeEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CategorizeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EmailCategorizationServiceServer).CategorizeEmails(ctx, in)
+		return srv.(EmailCategorizationServiceServer).CategorizeEmail(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: EmailCategorizationService_CategorizeEmails_FullMethodName,
+		FullMethod: EmailCategorizationService_CategorizeEmail_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EmailCategorizationServiceServer).CategorizeEmails(ctx, req.(*CategorizeRequest))
+		return srv.(EmailCategorizationServiceServer).CategorizeEmail(ctx, req.(*CategorizeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EmailCategorizationService_BatchCategorizeEmails_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchCategorizeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EmailCategorizationServiceServer).BatchCategorizeEmails(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EmailCategorizationService_BatchCategorizeEmails_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EmailCategorizationServiceServer).BatchCategorizeEmails(ctx, req.(*BatchCategorizeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -113,8 +147,12 @@ var EmailCategorizationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*EmailCategorizationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CategorizeEmails",
-			Handler:    _EmailCategorizationService_CategorizeEmails_Handler,
+			MethodName: "CategorizeEmail",
+			Handler:    _EmailCategorizationService_CategorizeEmail_Handler,
+		},
+		{
+			MethodName: "BatchCategorizeEmails",
+			Handler:    _EmailCategorizationService_BatchCategorizeEmails_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
