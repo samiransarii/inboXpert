@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	pb "github.com/samiransarii/inboXpert/services/email-categorization/proto"
 	utils "github.com/samiransarii/inboXpert/common/utils"
+	pb "github.com/samiransarii/inboXpert/services/email-categorization/proto"
 )
 
 type CategorizationHandler struct {
@@ -50,7 +50,7 @@ func (h *CategorizationHandler) Handle(c *gin.Context) {
 	grpcRequest := h.createGRPCRequest(requestData)
 
 	// Make gRPC call
-	response, err := client.CategorizeEmails(ctx, grpcRequest)
+	response, err := client.CategorizeEmail(ctx, grpcRequest)
 	if err != nil {
 		h.handleError(c, http.StatusInternalServerError, "Failed to categorize emails", err)
 		return
@@ -68,16 +68,16 @@ func (h *CategorizationHandler) createGRPCRequest(req CategorizeServiceRequest) 
 	grpcEmails := make([]*pb.Email, len(req.Emails))
 	for i, email := range req.Emails {
 		grpcEmails[i] = &pb.Email{
-			Id:        email.ID,
-			Subject:   email.Subject,
-			Body:      email.Body,
-			Sender:    email.Sender,
-			Recipents: email.Recipents,
-			Headers:   email.Headers,
+			Id:         email.ID,
+			Subject:    email.Subject,
+			Body:       email.Body,
+			Sender:     email.Sender,
+			Recipients: email.Recipients,
+			Headers:    email.Headers,
 		}
 	}
 	return &pb.CategorizeRequest{
-		Emails: grpcEmails,
+		Email: grpcEmails[0],
 	}
 }
 

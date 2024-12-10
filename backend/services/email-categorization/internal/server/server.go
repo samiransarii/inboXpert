@@ -17,12 +17,14 @@ import (
 
 type Server struct {
 	config       *models.Config
+	mlClient     mlclient.Service
 	grpcServer   *grpc.Server
 	categHandler *handlers.CategorizationHandler
-	mlClient     mlclient.Service
+	emailRepo    *handlers.EmailRepository
 }
 
 func NewServer(config *models.Config) (*Server, error) {
+	// Initialize mlClient
 	mlClient, err := mlclient.NewClient(mlclient.ClientConfig{
 		Address: config.MLServerAddr,
 	})
@@ -30,7 +32,10 @@ func NewServer(config *models.Config) (*Server, error) {
 		return nil, fmt.Errorf("failed to create ML client: %w", err)
 	}
 
-	handler := handlers.NewCategorizationHandler(mlClient, config)
+	// Initialize the email repository
+	emailRepo := handlers.NewEmailRepository(config.DBPool)
+
+	handler := handlers.NewCategorizationHandler(mlClient, config, emailRepo)
 
 	grpcServer := grpc.NewServer()
 	pb.RegisterEmailCategorizationServiceServer(grpcServer, handler)
@@ -38,9 +43,10 @@ func NewServer(config *models.Config) (*Server, error) {
 
 	return &Server{
 		config:       config,
+		mlClient:     mlClient,
 		grpcServer:   grpcServer,
 		categHandler: handler,
-		mlClient:     mlClient,
+		emailRepo:    emailRepo,
 	}, nil
 }
 

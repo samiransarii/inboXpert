@@ -10,7 +10,7 @@ import (
 	"github.com/samiransarii/inboXpert/common/utils"
 )
 
-func ConnectDB() *pgxpool.Pool {
+func connectDB() *pgxpool.Pool {
 	// Load environmental variables
 	err := godotenv.Load()
 	if err != nil {
@@ -36,7 +36,7 @@ func ConnectDB() *pgxpool.Pool {
 	// Create a new connection pool
 	dbpool, err := pgxpool.NewWithConfig(context.Background(), config)
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v, err")
+		log.Fatalf("Unable to connect to database: %v", err)
 	}
 
 	log.Printf("Connected to PostgreSQL!")

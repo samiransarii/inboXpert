@@ -2,11 +2,14 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"sync"
 
+	"github.com/google/uuid"
 	"github.com/samiransarii/inboXpert/services/email-categorization/internal/models"
+	"github.com/samiransarii/inboXpert/services/email-categorization/internal/models/db"
 	"github.com/samiransarii/inboXpert/services/email-categorization/internal/utils/converter"
 
 	mlclient "github.com/samiransarii/inboXpert/services/common/ml_client"
@@ -15,26 +18,56 @@ import (
 )
 
 type CategorizationHandler struct {
-	mlClient   mlclient.Service
 	config     *models.Config
 	workerPool chan struct{}
+	mlClient   mlclient.Service
+	emailRepo  *EmailRepository
 	pb.UnimplementedEmailCategorizationServiceServer
 }
 
-func NewCategorizationHandler(mlClient mlclient.Service, config *models.Config) *CategorizationHandler {
+func NewCategorizationHandler(mlClient mlclient.Service, config *models.Config, emailRepo *EmailRepository) *CategorizationHandler {
 	return &CategorizationHandler{
-		mlClient:   mlClient,
 		config:     config,
 		workerPool: make(chan struct{}, config.NumWorkers),
+		mlClient:   mlClient,
+		emailRepo:  emailRepo,
 	}
 }
 
 func (h *CategorizationHandler) CategorizeEmail(ctx context.Context, req *pb.CategorizeRequest) (*pb.CategorizeResponse, error) {
-	internalEmail := converter.FromProtoEmail(req.Email)
+	// Generate a new UUID for the email
+	emailID := uuid.New().String()
 
+	// Convert protobuf email to internal email model
+	internalEmail := converter.FromProtoEmail(req.Email)
+	internalEmail.ID = emailID
+
+	// save email to the database
+	err := h.emailRepo.SaveEmail(ctx, *internalEmail)
+	if err != nil {
+		return nil, fmt.Errorf("failed to save email to the database: %w", err)
+	}
+
+	// Process the email categorization
 	result, err := h.processSingleEmail(ctx, internalEmail)
 	if err != nil {
 		return nil, fmt.Errorf("failed to process email: %w", err)
+	}
+
+	// Save categorization results to the database
+	categoriesJSON, err := json.Marshal(result.Categories)
+	if err != nil {
+		log.Printf("Failed to categorize the email")
+	}
+	categorizationRecord := db.CatgegoryRecord{
+		ID:              uuid.New().String(),
+		EmailID:         emailID,
+		Categories:      string(categoriesJSON),
+		ConfidenceScore: result.ConfidenceScore,
+	}
+	err = h.emailRepo.SaveCategory(ctx, categorizationRecord)
+	if err != nil {
+		log.Printf("Failed to save categorizatrion record: %v", err)
 	}
 
 	// Convert internal CategoryResult to protobuf CategoryResult
@@ -83,13 +116,6 @@ func (h *CategorizationHandler) BatchCategorizeEmails(ctx context.Context, req *
 		close(errChan)
 	}()
 
-	// var errs []error
-	// var errStrings []string
-	// for err := range errChan {
-	// 	errs = append(errs, err)
-	// 	errStrings = append(errStrings, err.Error())
-	// }
-
 	for result := range resultChan {
 		results = append(results, result)
 	}
@@ -131,10 +157,6 @@ func (h *CategorizationHandler) processSingleEmail(ctx context.Context, email *m
 		Categories:      []string{mlResponse.Category},
 		ConfidenceScore: mlResponse.ConfidenceScore,
 	}
-
-	// for _, alt := range mlResponse.Alternatives {
-	// 	result.Categories = append(result.Categories, alt.Category)
-	// }
 
 	return result, nil
 }

@@ -5,7 +5,7 @@ type EmailRequest struct {
 	Subject   string            `json:"subject"`
 	Body      string            `json:"body"`
 	Sender    string            `json:"sender"`
-	Recipents []string          `json:"recipients"`
+	Recipients []string          `json:"recipients"`
 	Headers   map[string]string `json:"headers"`
 }
 
