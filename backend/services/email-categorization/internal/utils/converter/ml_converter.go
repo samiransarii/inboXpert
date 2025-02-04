@@ -5,6 +5,8 @@ import (
 	"github.com/samiransarii/inboXpert/services/email-categorization/internal/models"
 )
 
+// ToMLRequest converts an internal MLRequest model into the mlpb.EmailRequest
+// type defined in the machine learning server's protobuf specification.
 func ToMLRequest(req *models.MLRequest) *mlpb.EmailRequest {
 	return &mlpb.EmailRequest{
 		Id:         req.ID,
@@ -16,6 +18,8 @@ func ToMLRequest(req *models.MLRequest) *mlpb.EmailRequest {
 	}
 }
 
+// FromMLResponse converts a CategoryResponse from the ML service (protobuf form)
+// into the internal MLResponse model. It also maps any alternative categories.
 func FromMLResponse(resp *mlpb.CategoryResponse) *models.MLResponse {
 	alternatives := make([]models.Alternative, len(resp.Alternatives))
 	for i, alt := range resp.Alternatives {

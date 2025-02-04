@@ -12,6 +12,9 @@ import (
 	"google.golang.org/grpc/keepalive"
 )
 
+// GRPCClientManager manages the lifecycle of multiple gRPC client connections,
+// allowing reuse of connections and ensuring thread-safe access. It provides
+// methods to retrieve, create, and close connections as needed.
 type GRPCClientManager struct {
 	connections map[string]*grpc.ClientConn
 	mutex       sync.RWMutex
@@ -22,6 +25,9 @@ var (
 	once    sync.Once
 )
 
+// GetGRPCClientManager returns a singleton instance of GRPCClientManager.
+// Using sync.Once ensures that this instance is initialized only once,
+// which helps maintain a global connection manager throughout the application.
 func GetGRPCClientManager() *GRPCClientManager {
 	once.Do(func() {
 		manager = &GRPCClientManager{
@@ -31,8 +37,17 @@ func GetGRPCClientManager() *GRPCClientManager {
 	return manager
 }
 
+// GetConnection retrieves a gRPC client connection for the provided serviceAddr.
+// If a connection for the given address already exists, it returns that connection.
+// Otherwise, it establishes a new connection with configured options, stores it,
+// and returns it.
+//
+// It uses a read-write lock to safely manage concurrent access to the connection map.
+// If the connection does not exist initially, the manager acquires a write lock and
+// creates a new connection. Subsequent calls for the same address will return the
+// cached connection.
 func (m *GRPCClientManager) GetConnection(ctx context.Context, serviceAddr string) (*grpc.ClientConn, error) {
-	// Try to get existing connection
+	// First, attempt to retrieve the connection using a read lock.
 	m.mutex.RLock()
 	if conn, exists := m.connections[serviceAddr]; exists {
 		m.mutex.RUnlock()
@@ -40,16 +55,19 @@ func (m *GRPCClientManager) GetConnection(ctx context.Context, serviceAddr strin
 	}
 	m.mutex.RUnlock()
 
-	// Create new connection if none exists
+	// Acquire write lock to create a new connection if needed.
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
-	// Double check after acquiring write lock
+	// Double-check if another goroutine created the connection before we acquired the lock.
 	if conn, exists := m.connections[serviceAddr]; exists {
 		return conn, nil
 	}
 
-	// Configure client options
+	// Set up connection options:
+	// - Insecure credentials for transport (suitable for local dev or if using an external TLS layer).
+	// - Keepalive parameters to maintain healthy connections.
+	// - Default service config enabling retries on transient errors (UNAVAILABLE).
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithKeepaliveParams(keepalive.ClientParameters{
@@ -71,18 +89,21 @@ func (m *GRPCClientManager) GetConnection(ctx context.Context, serviceAddr strin
         }`),
 	}
 
-	// Create new connection
+	// Create a new gRPC client connection.
 	conn, err := grpc.NewClient(serviceAddr, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC connection: %w", err)
 	}
 
-	// Store the connection
+	// Store the newly created connection in the manager.
 	m.connections[serviceAddr] = conn
 
 	return conn, nil
 }
 
+// CloseConnection closes a specific gRPC client connection identified by serviceAddr,
+// if it exists. Once closed, it removes the connection from the manager's internal map.
+// If the connection does not exist, it does nothing.
 func (m *GRPCClientManager) CloseConnection(serviceAddr string) error {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
@@ -96,6 +117,11 @@ func (m *GRPCClientManager) CloseConnection(serviceAddr string) error {
 	return nil
 }
 
+// CloseAllConnections gracefully closes all open gRPC client connections managed
+// by the GRPCClientManager. It returns the last encountered error, if any.
+//
+// This method can be used during application shutdown to ensure that all resources
+// are released properly.
 func (m *GRPCClientManager) CloseAllConnections() error {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()

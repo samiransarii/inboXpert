@@ -8,20 +8,20 @@ import (
 	"github.com/samiransarii/inboXpert/services/email-categorization/internal/models/db"
 )
 
+// ToServiceModel converts a database email record (EmailDB) into a service-level Email model.
+// It handles JSON deserialization of headers and recipients.
 func ToServiceModel(e *db.EmailDB) models.Email {
 	var headers map[string]string
 	var recipients []string
 
 	if e.Headers != "" {
-		err := json.Unmarshal([]byte(e.Headers), &headers)
-		if err != nil {
+		if err := json.Unmarshal([]byte(e.Headers), &headers); err != nil {
 			log.Printf("Failed to unmarshal headers: %v", err)
 		}
 	}
 
 	if e.Recipients != "" {
-		err := json.Unmarshal([]byte(e.Recipients), &recipients)
-		if err != nil {
+		if err := json.Unmarshal([]byte(e.Recipients), &recipients); err != nil {
 			log.Printf("Failed to deserialize recipients list: %v", err)
 		}
 	}
@@ -36,6 +36,8 @@ func ToServiceModel(e *db.EmailDB) models.Email {
 	}
 }
 
+// FromServiceModel converts a service-level Email model into a database-friendly EmailDB structure.
+// It serializes headers and recipients into JSON strings for storage.
 func FromServiceModel(email models.Email) db.EmailDB {
 	headerJSON, err := json.Marshal(email.Headers)
 	if err != nil {
@@ -46,7 +48,7 @@ func FromServiceModel(email models.Email) db.EmailDB {
 	recipientsJSON, err := json.Marshal(email.Recipients)
 	if err != nil {
 		log.Printf("Failed to serialize recipients: %v", err)
-		recipientsJSON = []byte("{}")
+		recipientsJSON = []byte("[]")
 	}
 
 	return db.EmailDB{

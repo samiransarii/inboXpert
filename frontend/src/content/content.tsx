@@ -62,7 +62,7 @@ function fixGmailStyles() {
 }
 
 // Function to inject the React component
-function injectReactComponent(targetElement: Element) {
+async function injectReactComponent(targetElement: Element) {
   // Prevent multiple injections
   if (document.getElementById("react-content-script-container")) {
     return;
@@ -76,6 +76,9 @@ function injectReactComponent(targetElement: Element) {
 
   const root = ReactDOM.createRoot(appContainer);
   root.render(<TopbarActions />);
+
+  const emails = await fetchEmails();
+  console.log(emails);
 }
 
 // Function to handle mutations
@@ -100,6 +103,24 @@ function handleMutations(
   }
 }
 
+// Functions to fetch emails from authenticated users gmail inbox
+async function fetchEmails() {
+  try {
+    const response = await chrome.runtime.sendMessage({
+      action: "categorizeEmails",
+    });
+    if (response.success) {
+      return response.emails;
+    } else {
+      console.error("Error fetching emails:", response.error);
+      throw new Error(response.error);
+    }
+  } catch (error) {
+    console.error("Error in fetchEmails:", error);
+    throw error;
+  }
+}
+
 // Initialize the content script
 (async function initializeContentScript() {
   try {
@@ -120,15 +141,6 @@ function handleMutations(
     observer.observe(emailViewContainerElement, {
       childList: true,
       subtree: true,
-    });
-
-    // Optional: Send a test message to background script
-    chrome.runtime.sendMessage({ action: "test" }, (response) => {
-      if (chrome.runtime.lastError) {
-        console.error("Error sending message:", chrome.runtime.lastError);
-      } else {
-        console.log("Background response:", response);
-      }
     });
   } catch (error) {
     console.error("Content script initialization failed:", error);

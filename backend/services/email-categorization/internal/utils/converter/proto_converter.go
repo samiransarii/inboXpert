@@ -5,7 +5,7 @@ import (
 	pb "github.com/samiransarii/inboXpert/services/email-categorization/proto"
 )
 
-// ToProtoEmail converts internal Email model to protobuf Email
+// ToProtoEmail converts an internal Email model into a protobuf Email message.
 func ToProtoEmail(email *models.Email) *pb.Email {
 	if email == nil {
 		return nil
@@ -20,7 +20,7 @@ func ToProtoEmail(email *models.Email) *pb.Email {
 	}
 }
 
-// FromProtoEmail converts protobuf Email to internal Email model
+// FromProtoEmail converts a protobuf Email message into an internal Email model.
 func FromProtoEmail(pbEmail *pb.Email) *models.Email {
 	if pbEmail == nil {
 		return nil
@@ -35,7 +35,7 @@ func FromProtoEmail(pbEmail *pb.Email) *models.Email {
 	}
 }
 
-// ToProtoCategoryResult converts internal CategoryResult to protobuf CategoryResult
+// ToProtoCategoryResult converts an internal CategoryResult model into a protobuf CategoryResult message.
 func ToProtoCategoryResult(result *models.CategoryResult) *pb.CategoryResult {
 	if result == nil {
 		return nil
@@ -47,7 +47,7 @@ func ToProtoCategoryResult(result *models.CategoryResult) *pb.CategoryResult {
 	}
 }
 
-// FromProtoCategoryResult converts protobuf CategoryResult to internal CategoryResult
+// FromProtoCategoryResult converts a protobuf CategoryResult message into an internal CategoryResult model.
 func FromProtoCategoryResult(pbResult *pb.CategoryResult) *models.CategoryResult {
 	if pbResult == nil {
 		return nil

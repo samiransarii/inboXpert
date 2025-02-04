@@ -15,6 +15,9 @@ import (
 	pb "github.com/samiransarii/inboXpert/services/email-categorization/proto"
 )
 
+// Server initializes and runs a gRPC server for email categorization.
+// It sets up the ML client, email repository, and categorization handler,
+// then registers the gRPC service and manages startup/shutdown.
 type Server struct {
 	config       *models.Config
 	mlClient     mlclient.Service
@@ -23,8 +26,10 @@ type Server struct {
 	emailRepo    *handlers.EmailRepository
 }
 
+// NewServer creates a new Server instance, configuring the ML client, repository, handlers,
+// and the gRPC server. It returns an error if any of the components fail to initialize.
 func NewServer(config *models.Config) (*Server, error) {
-	// Initialize mlClient
+	// Initialize the machine learning client
 	mlClient, err := mlclient.NewClient(mlclient.ClientConfig{
 		Address: config.MLServerAddr,
 	})
@@ -32,11 +37,13 @@ func NewServer(config *models.Config) (*Server, error) {
 		return nil, fmt.Errorf("failed to create ML client: %w", err)
 	}
 
-	// Initialize the email repository
+	// Initialize the email repository for database operations
 	emailRepo := handlers.NewEmailRepository(config.DBPool)
 
+	// Create the categorization handler that ties everything together
 	handler := handlers.NewCategorizationHandler(mlClient, config, emailRepo)
 
+	// Create and register the gRPC server and reflection service
 	grpcServer := grpc.NewServer()
 	pb.RegisterEmailCategorizationServiceServer(grpcServer, handler)
 	reflection.Register(grpcServer)
@@ -50,6 +57,8 @@ func NewServer(config *models.Config) (*Server, error) {
 	}, nil
 }
 
+// Start begins listening on the configured gRPC port and handles incoming requests.
+// If the server fails to start listening, it returns an error.
 func (s *Server) Start() error {
 	listener, err := net.Listen("tcp", s.config.GRPCPort)
 	if err != nil {
@@ -60,6 +69,8 @@ func (s *Server) Start() error {
 	return s.grpcServer.Serve(listener)
 }
 
+// Stop gracefully stops the gRPC server and closes the ML client, ensuring no new
+// requests are accepted and ongoing requests are completed before shutdown.
 func (s *Server) Stop() {
 	if s.mlClient != nil {
 		if err := s.mlClient.Close(); err != nil {

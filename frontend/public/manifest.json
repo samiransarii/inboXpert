@@ -3,8 +3,15 @@
   "name": "InboXpert",
   "description": "Keeps all your emails organized.",
   "version": "1.0",
-  "permissions": ["storage", "activeTab", "scripting"],
-  "host_permissions": ["https://mail.google.com/", "https://inbox.google.com/"],
+  "permissions": ["storage", "activeTab", "scripting", "identity"],
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "https://inbox.google.com/"
+  ],
+  "oauth2": {
+    "client_id": "10129883614-f3t67uri1jr9vshmr128t820ubb1kh2j.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/gmail.readonly"]
+  },
   "action": {
     "default_popup": "index.html",
     "default_icon": "assets/hello.png"

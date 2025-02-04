@@ -1,5 +1,6 @@
 package models
 
+// MLRequest represents the data sent to the machine learning service for categorization.
 type MLRequest struct {
 	ID        string
 	Subject   string
@@ -10,6 +11,8 @@ type MLRequest struct {
 	Priority  string
 }
 
+// MLResponse represents the response returned by the machine learning service,
+// including the primary category, confidence score, and any alternative categorizations.
 type MLResponse struct {
 	ID              string
 	Category        string
