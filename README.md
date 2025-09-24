@@ -13,6 +13,9 @@ so you can focus on what actually needs your attention.
 Under the hood, it blends **machine learning** with a few sensible **rules**,
 and connects to a small set of **modular backend services** to stay fast and scalable.
 
+<img src="mockup1.png" alt="InboXpert Mockup 1" width="720" style="margin-right:20px;"/>
+<img src="mockup2.png" alt="InboXpert Mockup 2" width="420"/>
+
 ---
 
 ## 🎯 Key Features
